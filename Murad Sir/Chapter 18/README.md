@@ -86,6 +86,7 @@ GRANT CREATE VIEW, CREATE TABLE, CREATE SYNONYM TO C##jane;
 
 ## Allow User to Create Tables
 ### Unlimited Quota:
+UNLIMITED is to use unlimited space for C##jane
 ```sql
 ALTER USER C##jane QUOTA UNLIMITED ON USERS;
 ```
