@@ -1,0 +1,87 @@
+-CREATE TABLE NEWSPAPER (
+    Feature      VARCHAR2(15) NOT NULL,
+    Section      CHAR(1),
+    Page         NUMBER
+);
+
+
+INSERT INTO NEWSPAPER VALUES ('National News', 'A', 1);
+INSERT INTO NEWSPAPER VALUES ('Sports', 'D', 1);
+INSERT INTO NEWSPAPER VALUES ('Editorials', 'A', 12);
+INSERT INTO NEWSPAPER VALUES ('Business', 'E', 1);
+INSERT INTO NEWSPAPER VALUES ('Weather', 'C', 2);
+INSERT INTO NEWSPAPER VALUES ('Television', 'B', 7);
+INSERT INTO NEWSPAPER VALUES ('Births', 'F', 7);
+INSERT INTO NEWSPAPER VALUES ('Classified', 'F', 8);
+INSERT INTO NEWSPAPER VALUES ('Modern Life', 'B', 1);
+INSERT INTO NEWSPAPER VALUES ('Comics', 'C', 4);
+INSERT INTO NEWSPAPER VALUES ('Movies', 'B', 4);
+INSERT INTO NEWSPAPER VALUES ('Bridge', 'B', 2);
+INSERT INTO NEWSPAPER VALUES ('Obituaries', 'F', 6);
+INSERT INTO NEWSPAPER VALUES ('Doctor Is In', 'F', 6);
+
+
+
+-SELECT * FROM NEWSPAPER;
+
+
+-DESCRIBE NEWSPAPER;
+
+
+
+-SET FEEDBACK OFF;
+-SET FEEDBACK 25;
+-SHOW FEEDBACK;
+
+
+
+-SELECT * FROM NEWSPAPER WHERE Section = 'F';
+
+-SELECT * FROM NEWSPAPER WHERE Section = 'F' ORDER BY Feature;
+
+-SELECT * FROM NEWSPAPER WHERE Section = 'F' ORDER BY Page, Feature;
+
+-SELECT * FROM NEWSPAPER WHERE Section = 'F' ORDER BY Page DESC, Feature;
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Page = 6;
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Page > 6;
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Page < 6;
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Page != 6;
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Section > 'B';
+
+-SELECT * FROM NEWSPAPER WHERE Feature LIKE 'Mo%';
+
+-SELECT * FROM NEWSPAPER WHERE Feature LIKE '__i%';
+
+-SELECT * FROM NEWSPAPER WHERE Feature LIKE '%o%o%';
+
+-SELECT * FROM NEWSPAPER WHERE Feature LIKE '%i%i%';
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Section IN ('A', 'B', 'F');
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Section NOT IN ('A', 'B', 'F');
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Page BETWEEN 7 AND 10;
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Section = 'F' AND Page > 7;
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Section = 'F' OR Page > 7;
+
+-SELECT Feature, Section, Page FROM NEWSPAPER WHERE Page > 2 AND (Section = 'A' OR Section = 'B');
+
+-SELECT Section FROM NEWSPAPER WHERE Feature = 'Doctor Is In';
+
+
+-SELECT FEATURE FROM NEWSPAPER WHERE Section = (SELECT Section FROM NEWSPAPER WHERE Feature = 'Doctor Is In');
+
+-SELECT * FROM NEWSPAPER WHERE Section = (SELECT Section FROM NEWSPAPER WHERE Page = 1);
+
+-SELECT * FROM NEWSPAPER WHERE Section < (SELECT Section FROM NEWSPAPER WHERE Feature = 'Doctor Is In');
+
+
+
+
