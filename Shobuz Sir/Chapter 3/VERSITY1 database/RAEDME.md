@@ -268,12 +268,5 @@ Below is a list of SQL queries to execute in the `VERSITY1` database. These quer
     );
     ```
 
----
 
-## Notes
-- Ensure the `VERSITY1` database is selected before running these queries.
-- Replace any placeholders (e.g., `'Comp. Sci.'`, `'Biology'`) with actual values if needed.
-- If any query fails, check for syntax errors or missing tables/columns.
-
----
 
