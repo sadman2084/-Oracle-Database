@@ -1,0 +1,5 @@
+open XAMPP then do the following things-
+first create a database named VERSITY1.then import the drop.sql
+2nd ,import the largeRelationsInsertFile.sql 
+
+

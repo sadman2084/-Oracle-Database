@@ -1,0 +1,185 @@
+after importing drop.sql and largerelationinsertfile.sql
+
+-SELECT dept_name FROM instructor;
+
+
+-select ID, name, dept name, salary * 1.1 from instructor;
+
+-Select name from instructor where dept_name=’Comp sci.’ and salary>70000
+
+-select instructor.name,instructor.dept_name, department.building from instructor, department where instructor.dept_name= department.dept_name;
+
+-select name, course id
+from instructor, teaches
+where instructor.ID= teaches.ID;
+select instructor.name, teaches.course_id
+from instructor, teaches
+where instructor.ID= teaches.ID;
+
+
+-select instructor.name, teaches.course_id from instructor, teaches where instructor.ID= teaches.ID and instructor.dept_name = 'Comp. Sci.';
+
+-select instructor.name, teaches.course_id from instructor, teaches where instructor.ID= teaches.ID;
+
+-select name as instructor_name, course_id as cor from instructor, teaches where instructor.ID= teaches.ID;
+
+-select T.name, S.course_id
+from instructor as T, teaches as S
+where T.ID= S.ID;
+
+
+-select distinct T.name from instructor as T, instructor as S where T.salary > S.salary and S.dept_name = 'Biology';
+
+-select dept_name from department where building like '%Whit%';
+
+-select name from instructor where dept_name = 'Physics' order by name;
+
+-select *
+from instructor
+order by salary desc, name asc;
+
+
+-select name from instructor where salary between 90000 and 100000;
+
+-select name from instructor where salary <= 100000 and salary >= 90000;
+
+-select instructor.name, teaches.course_id
+from instructor, teaches
+where instructor.ID= teaches.ID and dept name = 'Biology';
+
+
+-select instructor.name, teaches.course_id
+from instructor, teaches
+where (instructor.ID, dept_name) = (teaches.ID, 'Biology');
+
+
+-(select course_id
+from section
+where semester = 'Fall' and year= 2017)
+union
+(select course_id
+from section
+where semester = 'Spring' and year= 2018);
+
+
+-(select course_id
+from section
+where semester = 'Fall' and year= 2017)
+intersect
+(select course_id
+from section
+where semester = 'Spring' and year= 2018);
+
+
+-(select course_idid
+from section
+where semester = 'Fall' and year= 2017)
+intersect all
+(select course_id
+from section
+where semester = 'Spring' and year= 2018);
+
+
+-(select course_id
+from section
+where semester = 'Fall' and year= 2017)
+except
+(select course_id
+from section
+where semester = 'Spring' and year= 2018);
+
+
+-(select course_id
+from section
+where semester = 'Fall' and year= 2017)
+except all
+(select course_id
+from section
+where semester = 'Spring' and year= 2018);
+
+
+-select name
+from instructor
+where salary is null;
+
+
+-select name
+from instructor
+where salary > 10000 is unknown;
+
+
+-select avg (salary)
+from instructor
+where dept_name = 'Comp. Sci.';
+
+
+-SELECT avg(salary) as avg_salary from instructor
+where dept_name='Comp. Sci.';
+
+
+-select count(distinct ID)
+from teaches
+where semester = 'Spring' and year = 2018;
+
+
+-SELECT dept_name, avg_salary
+FROM (
+    SELECT dept_name, AVG(salary) AS avg_salary
+    FROM instructor
+    GROUP BY dept_name
+) AS subquery
+where avg_salary > 42000;
+
+
+-select count (*)
+from course;
+
+
+-select dept_name, avg (salary) as avg_salary from instructor group by dept_name;
+
+-select instructor.dept_name, count(distinct teaches.ID) as instr_count from instructor, teaches
+where instructor.ID= teaches.ID and
+semester = 'Spring' and year = 2018
+group by dept_name;
+
+
+-select dept_name, avg (salary) as avg_salary
+from instructor
+group by dept_name
+having avg(salary) > 42000;
+
+-select course_id, semester, year, sec_id, avg (tot_cred)
+from student, takes
+where student.ID= takes.ID and year = 2017
+group by course_id, semester, year, sec_id
+having count(student.ID) >= 2;
+
+
+-select sum(salary)
+from instructor;
+
+
+-(select cours_ id
+from section
+where semester = 'Spring' and year= 2018)
+
+
+-select distinct course_id
+from section
+where semester = 'Fall' and year= 2017 and
+course_id in (select course_id
+from section
+where semester = 'Spring' and year= 2018);
+
+-select count(distinct ID) from takes where (course_id, sec_id, semester, year) in (select course_id, sec_id, semester, year from teaches where teaches.ID= '10101');
+
+-select name from instructor where salary > some (select salary from instructor where dept_name = 'Biology');
+
+-select name
+from instructor
+where salary > all (select salary
+from instructor
+where dept_name = 'Biology');
+
+
+-
