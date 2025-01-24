@@ -182,4 +182,221 @@ from instructor
 where dept_name = 'Biology');
 
 
--
+-select dept_name
+from instructor
+group by dept_name
+having avg (salary) >= all (select avg (salary)
+from instructor
+group by dept_name)
+
+-select course_id from section as S
+where semester = 'Fall' and year= 2017 and
+exists (select * from section as T
+where semester = 'Spring' and year= 2018 and
+S.course_id= T.course_id);
+
+
+-select S.ID, S.name
+from student as S
+where not exists ((select course_id
+from course
+where dept_name = 'Biology')
+except
+(select T.course_id
+from takes as T
+where S.ID = T.ID));
+
+
+-. SELECT COUNT(DISTINCT ID)
+FROM takes
+WHERE EXISTS (
+    SELECT 1
+    FROM teaches
+    WHERE teaches.ID = '10101'
+      AND takes.course_id = teaches.course_id
+      AND takes.sec_id = teaches.sec_id
+      AND takes.semester = teaches.semester
+      AND takes.year = teaches.year
+);
+
+
+
+-SELECT T.course_id
+FROM course AS T
+WHERE T.course_id IN (
+    SELECT R.course_id
+    FROM section AS R
+    WHERE R.year = 2017
+    GROUP BY R.course_id
+    HAVING COUNT(R.course_id) = 1
+);
+
+
+
+-SELECT T.course_id
+FROM course AS T
+WHERE 1 >= (
+    SELECT COUNT(*)
+    FROM section AS R
+    WHERE T.course_id = R.course_id AND R.year = 2017
+);
+
+
+
+-. SELECT T.course_id
+FROM course AS T
+WHERE NOT EXISTS (
+    SELECT R.course_id
+    FROM section AS R
+    WHERE T.course_id = R.course_id AND R.year = 2017
+    GROUP BY R.course_id
+    HAVING COUNT(*) = 1
+);
+
+
+
+-SELECT MAX(tot_salary)
+FROM (
+    SELECT dept_name, SUM(salary) AS tot_salary
+    FROM instructor
+    GROUP BY dept_name
+) AS dept_total;
+
+
+
+-WITH max_budget AS (
+    SELECT MAX(budget) AS value
+    FROM department
+)
+SELECT budget
+FROM department, max_budget
+WHERE department.budget = max_budget.value;
+
+
+
+-WITH dept_total AS (
+    SELECT dept_name, SUM(salary) AS value
+    FROM instructor
+    GROUP BY dept_name
+),
+dept_total_avg AS (
+    SELECT AVG(value) AS avg_value
+    FROM dept_total
+)
+SELECT dept_name
+FROM dept_total, dept_total_avg
+WHERE dept_total.value > dept_total_avg.avg_value;
+
+
+
+-SELECT dept_name,
+(
+    SELECT COUNT(*)
+    FROM instructor
+    WHERE department.dept_name = instructor.dept_name
+) AS num_instructors
+FROM department;
+
+
+
+-DELETE FROM instructor
+WHERE dept_name = 'Finance';
+
+
+
+-DELETE FROM instructor
+WHERE salary BETWEEN 13000 AND 15000;
+
+
+
+-. DELETE FROM instructor
+WHERE dept_name IN (
+    SELECT dept_name
+    FROM department
+    WHERE building = 'Watson'
+);
+
+
+
+-. DELETE FROM instructor
+WHERE salary < (
+    SELECT AVG(salary)
+    FROM instructor
+);
+
+
+
+-INSERT INTO course
+VALUES ('CS-437', 'Database Systems', 'Comp. Sci.', 4);
+
+
+
+-. INSERT INTO course (course_id, title, dept_name, credits)
+VALUES ('CS-497', 'Database Systems', 'Comp. Sci.', 4);
+
+
+-INSERT INTO course (title, course_id, credits, dept_name)
+VALUES ('Database Systems', 'CS-427', 4, 'Comp. Sci.');
+
+
+
+-INSERT INTO instructor
+SELECT ID, name, dept_name, 18000
+FROM student
+WHERE dept_name = 'Music' AND tot_cred > 144;
+
+
+
+-INSERT INTO student
+VALUES ('3003', 'Green', 'Finance', NULL);
+
+
+
+- UPDATE instructor
+SET salary = salary * 1.05
+WHERE salary < 70000;
+
+
+-UPDATE instructor
+SET salary = salary * 1.05
+WHERE salary < (
+    SELECT AVG(salary)
+    FROM instructor
+);
+
+
+
+-UPDATE instructor
+SET salary = salary * 1.03
+WHERE salary > 100000;
+UPDATE instructor
+SET salary = salary * 1.05
+WHERE salary <= 100000;
+
+
+
+-UPDATE instructor
+SET salary = CASE
+    WHEN salary <= 100000 THEN salary * 1.05
+    ELSE salary * 1.03
+END;
+
+
+
+-UPDATE student
+SET tot_cred = (
+    SELECT SUM(credits)
+    FROM takes, course
+    WHERE student.ID = takes.ID
+      AND takes.course_id = course.course_id
+      AND takes.grade <> 'F'
+      AND takes.grade IS NOT NULL
+);
+
+
+
+
+-SELECT CASE
+    WHEN SUM(credits) IS NOT NULL THEN SUM(credits)
+    ELSE 0
+END;
