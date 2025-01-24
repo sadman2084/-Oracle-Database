@@ -268,5 +268,232 @@ Below is a list of SQL queries to execute in the `VERSITY1` database. These quer
     );
     ```
 
+38. Count of Distinct IDs
+
+```sql
+SELECT COUNT(DISTINCT ID)
+FROM takes
+WHERE EXISTS (
+    SELECT 1
+    FROM teaches
+    WHERE teaches.ID = '10101'
+      AND takes.course_id = teaches.course_id
+      AND takes.sec_id = teaches.sec_id
+      AND takes.semester = teaches.semester
+      AND takes.year = teaches.year
+);
+```
+
+This query counts the number of distinct student IDs in the `takes` table where the student is enrolled in the same course and section taught by instructor `10101`.
+
+---
+
+39. Courses with Single Section in 2017
+
+```sql
+SELECT T.course_id
+FROM course AS T
+WHERE T.course_id IN (
+    SELECT R.course_id
+    FROM section AS R
+    WHERE R.year = 2017
+    GROUP BY R.course_id
+    HAVING COUNT(R.course_id) = 1
+);
+```
+
+This query retrieves the list of courses that had only one section offered in the year 2017.
+
+---
+
+40. Courses with Sections in 2017
+
+```sql
+SELECT T.course_id
+FROM course AS T
+WHERE 1 >= (
+    SELECT COUNT(*)
+    FROM section AS R
+    WHERE T.course_id = R.course_id AND R.year = 2017
+);
+```
+
+This query returns courses that had one or fewer sections in the year 2017.
+
+---
+
+41. Courses without Sections in 2017
+
+```sql
+SELECT T.course_id
+FROM course AS T
+WHERE NOT EXISTS (
+    SELECT R.course_id
+    FROM section AS R
+    WHERE T.course_id = R.course_id AND R.year = 2017
+    GROUP BY R.course_id
+    HAVING COUNT(*) = 1
+);
+```
+
+This query selects courses that did not have exactly one section in 2017.
+
+---
+
+42. Max Total Salary per Department
+
+```sql
+SELECT MAX(tot_salary)
+FROM (
+    SELECT dept_name, SUM(salary) AS tot_salary
+    FROM instructor
+    GROUP BY dept_name
+) AS dept_total;
+```
+
+This query finds the maximum total salary by department.
+
+---
+
+43. Max Budget in Department
+
+```sql
+WITH max_budget AS (
+    SELECT MAX(budget) AS value
+    FROM department
+)
+SELECT budget
+FROM department, max_budget
+WHERE department.budget = max_budget.value;
+```
+
+This query retrieves the department with the highest budget.
+
+---
+
+44. Departments Above Average Salary
+
+```sql
+WITH dept_total AS (
+    SELECT dept_name, SUM(salary) AS value
+    FROM instructor
+    GROUP BY dept_name
+),
+dept_total_avg AS (
+    SELECT AVG(value) AS avg_value
+    FROM dept_total
+)
+SELECT dept_name
+FROM dept_total, dept_total_avg
+WHERE dept_total.value > dept_total_avg.avg_value;
+```
+
+This query finds departments whose total salary exceeds the average salary of all departments.
+
+---
+
+45. Count of Instructors per Department
+
+```sql
+SELECT dept_name,
+(
+    SELECT COUNT(*)
+    FROM instructor
+    WHERE department.dept_name = instructor.dept_name
+) AS num_instructors
+FROM department;
+```
+
+This query counts the number of instructors in each department.
+
+---
+
+46. Delete Instructors by Department
+
+```sql
+DELETE FROM instructor
+WHERE dept_name = 'Finance';
+```
+
+This query deletes all instructors from the `Finance` department.
+
+---
+
+47. Delete Instructors by Salary
+
+```sql
+DELETE FROM instructor
+WHERE salary BETWEEN 13000 AND 15000;
+```
+
+This query deletes instructors with salaries between $13,000 and $15,000.
+
+---
+
+48. Insert Courses
+
+```sql
+INSERT INTO course
+VALUES ('CS-437', 'Database Systems', 'Comp. Sci.', 4);
+```
+
+This query inserts a new course into the `course` table.
+
+---
+
+49. Insert Instructors from Students
+
+```sql
+INSERT INTO instructor
+SELECT ID, name, dept_name, 18000
+FROM student
+WHERE dept_name = 'Music' AND tot_cred > 144;
+```
+
+This query inserts instructors into the `instructor` table based on students from the `Music` department with more than 144 credits.
+
+---
+
+50. Update Instructor Salaries
+
+```sql
+UPDATE instructor
+SET salary = salary * 1.05
+WHERE salary < 70000;
+```
+
+This query increases the salary of instructors who earn less than $70,000 by 5%.
+
+---
+
+51. Update Student Credits
+
+```sql
+UPDATE student
+SET tot_cred = (
+    SELECT SUM(credits)
+    FROM takes, course
+    WHERE student.ID = takes.ID
+      AND takes.course_id = course.course_id
+      AND takes.grade <> 'F'
+      AND takes.grade IS NOT NULL
+);
+```
+
+This query updates the total credits for each student, excluding failed grades.
+
+---
+
+52. Conditional Credit Sum
+
+```sql
+SELECT CASE
+    WHEN SUM(credits) IS NOT NULL THEN SUM(credits)
+    ELSE 0
+END;
+```
+
+This query computes the sum of credits for students, returning `0` if the sum is `NULL`.
+
 
 
