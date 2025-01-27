@@ -29,7 +29,7 @@ CREATE USER C##jane IDENTIFIED BY eyre PROFILE C##LIMITED_PROFILE;
 
 ## Grant Privileges to a User
 ```sql
-GRANT CREATE SESSION TO C##mehedi;
+GRANT CREATE SESSION TO C##JANE;
 ```
 
 ## Connect as a User
