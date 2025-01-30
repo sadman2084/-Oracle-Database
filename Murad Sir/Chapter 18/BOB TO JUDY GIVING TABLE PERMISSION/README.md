@@ -1,5 +1,3 @@
-# README: Oracle SQL User Management and Table Operations
-
 ## Overview
 This script creates two database users (`C##BOB` and `C##JUDY`), manages privileges, and performs various operations on a `NEWSPAPER` table in an Oracle database.
 
@@ -17,7 +15,7 @@ DROP USER C##JUDY CASCADE;
 ```
 - Deletes the users `C##BOB` and `C##JUDY`, along with all their objects.
 
-### 2. **Creating Users**
+### 2. **Creating Users(From System)**
 ```sql
 CREATE USER C##BOB IDENTIFIED BY pizza;
 GRANT CREATE SESSION, CREATE TABLE, CREATE SYNONYM TO C##BOB;
