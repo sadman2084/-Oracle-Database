@@ -1,0 +1,59 @@
+DROP USER C##BOB CASCADE;
+
+DROP USER C##Judy CASCADE;
+
+
+ create user C##BOB indentified by pizza;
+GRANT CREATE SESSION, CREATE TABLE, CREATE SYNONYM TO C##BOB;
+
+create user C##JUDY identified by burger;
+grant create session to C##JUDY;
+
+ connect C##BOB/pizza;
+
+create table NEWSPAPER (
+Feature      VARCHAR2(15) not null,
+Section      CHAR(1),
+Page         NUMBER
+);
+
+insert into NEWSPAPER values ('National News', 'A', 1);
+insert into NEWSPAPER values ('Sports', 'D', 1);
+insert into NEWSPAPER values ('Editorials', 'A', 12);
+insert into NEWSPAPER values ('Business', 'E', 1);
+insert into NEWSPAPER values ('Weather', 'C', 2);
+insert into NEWSPAPER values ('Television', 'B', 7);
+insert into NEWSPAPER values ('Births', 'F', 7);
+insert into NEWSPAPER values ('Classified', 'F', 8);
+insert into NEWSPAPER values ('Modern Life', 'B', 1);
+insert into NEWSPAPER values ('Comics', 'C', 4);
+insert into NEWSPAPER values ('Movies', 'B', 4);
+insert into NEWSPAPER values ('Bridge', 'B', 2);
+insert into NEWSPAPER values ('Obituaries', 'F', 6);
+insert into NEWSPAPER values ('Doctor Is In', 'F', 6);
+
+
+
+
+GRANT SELECT ON NEWSPAPER TO C##JUDY;
+
+
+GRANT INSERT, UPDATE, DELETE ON newspaper TO C##JUDY;
+
+
+connect C##JUDY/burger;
+
+
+
+select * from C##BOB.NEWSPApER;
+
+insert into NEWSPAPER values ('Sadman is alive', 'F', 6);
+
+
+UPDATE C##bob.newspaper
+SET FEATURE = 'cat'
+WHERE page =1;
+
+
+delete from C##bob.newspaper
+where section='D';
