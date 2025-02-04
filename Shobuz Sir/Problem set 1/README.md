@@ -1,15 +1,13 @@
-# README
-
 ## SQL Queries and Explanations
 
-### G1. Find the names of those departments whose budget is higher than that of Astronomy. List them in alphabetical order.
+### 1. Find the names of those departments whose budget is higher than that of Astronomy. List them in alphabetical order.
 ```sql
 SELECT dept_name FROM department
 WHERE budget > (SELECT budget FROM department WHERE dept_name = 'Astronomy')
 ORDER BY dept_name ASC;
 ```
 
-### G2. Display a list of all instructors, showing each instructor's ID and the number of sections taught. Make sure to show the number of sections as 0 for instructors who have not taught any section.
+### 2. Display a list of all instructors, showing each instructor's ID and the number of sections taught. Make sure to show the number of sections as 0 for instructors who have not taught any section.
 ```sql
 SELECT instructor.ID,
        COALESCE(COUNT(teaches.sec_id), 0) AS number_of_sections
@@ -19,7 +17,7 @@ GROUP BY instructor.ID
 ORDER BY number_of_sections ASC, instructor.ID ASC;
 ```
 
-### G3. For each student who has retaken a course at least twice (i.e., the student has taken the course at least three times), show the course ID and the student's ID. Please display your results in order of course ID and do not display duplicate rows.
+### 3. For each student who has retaken a course at least twice (i.e., the student has taken the course at least three times), show the course ID and the student's ID. Please display your results in order of course ID and do not display duplicate rows.
 ```sql
 SELECT DISTINCT course_id, ID
 FROM takes
