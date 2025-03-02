@@ -73,7 +73,7 @@ ALTER PROFILE C##LIMITED_PROFILE LIMIT
         FAILED_LOGIN_ATTEMPTS 2
         PASSWORD_REUSE_TIME UNLIMITED;
 ```
-
+If you see this message 'ORA-01031: insufficient privileges',then you need to connect to system first.
 ## View All Profiles
 ```sql
 SELECT * FROM DBA_PROFILES;
