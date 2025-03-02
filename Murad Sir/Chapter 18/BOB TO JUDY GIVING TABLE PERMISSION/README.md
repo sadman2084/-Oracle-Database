@@ -19,6 +19,9 @@ DROP USER C##JUDY CASCADE;
 ```sql
 CREATE USER C##BOB IDENTIFIED BY pizza;
 GRANT CREATE SESSION, CREATE TABLE, CREATE SYNONYM TO C##BOB;
+ALTER USER C##BOB
+  DEFAULT TABLESPACE users
+  QUOTA unlimited ON users;
 ```
 - Creates user `C##BOB` with password `pizza`
 - Grants session creation, table creation, and synonym creation privileges
