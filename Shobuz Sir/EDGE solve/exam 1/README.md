@@ -1,6 +1,5 @@
 # README - SQL Queries Explanation
 
-Ei README file e SQL er bibhinno query niye alochona kora holo. Prottek query er upor ekta short explanation deya ache.
 
 ## 1. Employee Table Creation and Data Insertion
 ```sql
@@ -35,7 +34,7 @@ SELECT
 FROM Employee
 GROUP BY Employee_ID, Employee_Name, Department;
 ```
-**Explanation:** Ei query te salary information ke pivot korechi jate month-wise dekhano jay.
+**Explanation:** "এই query তে **salary** তথ্যকে **pivot** করা হয়েছে যাতে মাস অনুযায়ী দেখা যায়। অর্থাৎ, প্রতি মাসে কত টাকা বেতন দেওয়া হচ্ছে, সেটি আলাদা করে প্রদর্শিত হবে।"
 ## 2. Password Management
 ```sql
 create profile C##combine
