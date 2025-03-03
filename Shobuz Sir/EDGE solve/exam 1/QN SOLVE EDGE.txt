@@ -1,0 +1,169 @@
+1.
+```
+CREATE TABLE employee (
+    employee_id INT,
+    employee_name VARCHAR(50),
+    department VARCHAR(50),
+    salary INT,
+    month VARCHAR(50),
+    PRIMARY KEY (employee_id, month)
+);
+
+
+
+INSERT INTO employee (employee_id, employee_name, department, salary, month)
+VALUES
+(1, 'Alice', 'HR', 5555, 'January'),
+(1, 'Alice', 'HR', 5555, 'February'),
+(1, 'Alice', 'HR', 5555, 'March'),
+(2, 'BOB', 'IT', 5555, 'January'),
+(2, 'BOB', 'IT', 5555, 'February'),
+(2, 'BOB', 'IT', 5555, 'March');
+
+
+SELECT 
+    Employee_ID, 
+    Employee_Name, 
+    Department,
+    MAX(CASE WHEN Month = 'January' THEN Salary END) AS January,
+    MAX(CASE WHEN Month = 'February' THEN Salary END) AS February,
+    MAX(CASE WHEN Month = 'March' THEN Salary END) AS March
+FROM Employee
+GROUP BY Employee_ID, Employee_Name, Department;
+
+```
+2.
+```
+create profile C##combine
+limit
+password_life_time 10
+password_grace_time 8
+password_reuse_max 3
+password_lock_time 1
+failed_login_attempts 2
+password_reuse_time 10
+
+create user C##jane identified by test profile C##combine;
+
+grant create session to C##jane;
+```
+3.
+
+inner join:jehetu join hoy 2 ta alada table e,but ei dike only 1 ta table ase jake ekbar 'e' abr 's' dhora hocche,mane same table kei pashapashi join korar moto,same table er moddhe join use korle always row same ashbe karon kew ee baad jabe na,output :n*n hobe,ekhane alice 3 bar and bob 3 bar use korsi taile ans 3*3=9 ta row create hobe always.
+2nd case hote pare j 2ta table ase but 2 tar primary key same,tokhon o row number same hobe.
+
+
+```
+SELECT e.Employee_ID, e.Employee_Name, e.Department, s.Salary, s.Month
+FROM Employee e
+INNER JOIN Employee s ON e.Employee_ID = s.Employee_ID;
+```
+
+left join:
+```
+select e.employee_id,e.employee_name,e.department,s.salary,s.month from employee e
+left join employee s on e.employee_id=s.employee_id;
+```
+
+
+right join:
+```
+select e.employee_id,e.employee_name,e.department,s.salary,s.month from employee e
+right join employee s on e.employee_id=s.employee_id;
+```
+
+
+union join/full join :bangla kotha left and right ek shate join
+
+```
+select e.employee_id,e.employee_name,e.department,s.salary,s.month from employee e
+left join employee s on e.employee_id=s.employee_id;
+
+union
+
+select e.employee_id,e.employee_name,e.department,s.salary,s.month from employee e
+right join employee s on e.employee_id=s.employee_id;
+
+```
+
+
+cross join:many to many relation.mane left entity er shate right entity er relation,mane shobar shate shobar relation.
+```
+select e.employee_id,e.employee_name,e.department,s.salary,s.month from employee e
+cross join employee s;
+```
+
+ekhane jehetu shobar shate shobar relation,tai kono condition dorkar nai.
+
+
+deleting duplicate values:
+inner query explanation:age joto query thakbe jara repeated,tader theke minimum ekta k choose korbe.
+outer query explanation:ekta 1 ta query bade bki gula k delete kore dibe.ei jonno 'NOT IN' use kora.
+
+```
+DELETE FROM Employee
+WHERE Employee_ID NOT IN (
+    SELECT MIN(Employee_ID) FROM Employee 
+    GROUP BY Employee_ID, Month
+);
+
+```
+
+
+
+4(i):
+
+```
+CREATE TABLE Course (
+    Course_ID INT PRIMARY KEY,
+    TITLE VARCHAR(50),
+    DEPT_NAME VARCHAR(50),
+    CREDITS INT
+);
+```
+
+
+4(ii):ekhane ami large database use korechi,tai budget er exchange e salary dhorsi.
+
+```
+SELECT COURSE.DEPT_NAME ,INSTRUCTOR.SALARY 
+FROM Course ,INSTRUCTOR 
+WHERE SALARY > (SELECT SALARY FROM INSTRUCTOR WHERE DEPT_NAME = 'Astronomy') 
+ORDER BY DEPT_NAME;
+```
+
+4(iii):
+```
+select NAME FROM instructor
+WHERE DEPT_NAME='Comp. Sci.' AND SALARY <90000;
+```
+
+4(iv):ekhane semester and year info teaches table e ase tai instructor and teaches join kori.and instructor and teaches e ID same tai instructor.ID = teaches.ID ei condition e join kori.then ekta new condition add kori semester and year er jonno jate semester 
+
+```
+SELECT instructor.dept_name, COUNT(DISTINCT instructor.ID)
+FROM instructor
+JOIN teaches ON instructor.ID = teaches.ID
+WHERE teaches.semester = 'Spring' AND teaches.year = 2010
+GROUP BY instructor.dept_name;
+
+```
+
+4(v):
+```
+UPDATE instructor
+SET salary = 
+    CASE 
+        WHEN salary > 100000 THEN salary * 1.0303  
+        ELSE salary * 1.045 
+    END;
+
+```
+
+
+5.(chatgpt)
+PASSWORD_REUSE_MAX vs PASSWORD_REUSE_TIME
+Justification:
+PASSWORD_REUSE_MAX: Specifies how many times a password can be reused before it is blocked.
+PASSWORD_REUSE_TIME: Specifies a time duration (in days) before a password can be reused.
+These are mutually exclusive because setting both can create conflicts. If one is set, the other must not be UNLIMITED to avoid security loopholes.
