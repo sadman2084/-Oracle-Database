@@ -167,13 +167,10 @@ Below is a list of SQL queries to execute in the `VERSITY1` database. These quer
 
 26. **Retrieve Departments with Average Salary > 42000**
     ```sql
-    SELECT dept_name, avg_salary
-    FROM (
-        SELECT dept_name, AVG(salary) AS avg_salary
-        FROM instructor
-        GROUP BY dept_name
-    ) AS subquery
-    WHERE avg_salary > 42000;
+      SELECT dept_name 
+      FROM instructor 
+      GROUP BY dept_name 
+      HAVING AVG(salary) > 42000;
     ```
 
 27. **Count Total Courses**
