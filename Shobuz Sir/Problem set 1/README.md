@@ -214,11 +214,10 @@ GROUP BY dept_name;
 
 ### G21. List out the departments where the average salary of the instructors is more than $42,000.
 ```sql
-SELECT department.dept_name
-FROM department
-JOIN instructor ON department.dept_name = instructor.dept_name
-GROUP BY department.dept_name
-HAVING AVG(instructor.salary) > 42000;
+  SELECT dept_name 
+   FROM instructor 
+   GROUP BY dept_name 
+   HAVING AVG(salary) > 42000;;
 ```
 
 ### G24. Find all the courses taught in the Fall-2009 semester but not in the Spring-2010 semester.
