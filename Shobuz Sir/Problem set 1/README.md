@@ -25,6 +25,113 @@ GROUP BY course_id, ID
 HAVING COUNT(*) >= 3
 ORDER BY ID, course_id;
 ```
+### 4.Find the names of Biology students who have taken at least 3 Accounting courses.
+```sql
+SELECT s.name 
+FROM student s, takes t, course c 
+WHERE s.ID = t.ID AND t.course_id = c.course_id 
+AND s.dept_name = 'Biology' AND c.dept_name = 'Accounting' 
+GROUP BY s.ID, s.name 
+HAVING COUNT(*) >= 3;
+
+```
+### 5. Find the sections that had maximum enrollment in Fall 2010.
+```sql
+SELECT course_id, sec_id 
+FROM takes 
+WHERE semester = 'Fall' AND year = 2010 
+GROUP BY course_id, sec_id 
+HAVING COUNT(ID) = (
+    SELECT MAX(cnt) 
+    FROM (SELECT COUNT(ID) AS cnt FROM takes 
+          WHERE semester = 'Fall' AND year = 2010 
+          GROUP BY course_id, sec_id) AS max_enroll
+);
+```
+### 6. Find student names and the number of law courses taken for students who have taken at least half of the available law courses. (These courses are named things like or Environmental Law.
+```sql
+SELECT student.name, COUNT(takes.course_id) AS law_courses_taken
+FROM student
+JOIN takes ON student.ID = takes.ID
+JOIN course ON takes.course_id = course.course_id
+WHERE course.title LIKE '%Law%'
+GROUP BY student.ID, student.name
+HAVING COUNT(takes.course_id) >= (
+SELECT COUNT(course_id) / 2
+FROM course
+WHERE title LIKE '%Law%'
+);
+```
+
+### 7. Find the rank and name of the 10 students who earned the most A grades (A-, A, A+). Use alphabetical order by name to break ties. Note: the browser SQLite does not support window functions.
+```sql
+SELECT student.name, COUNT(*) AS a_count
+FROM student
+JOIN takes ON student.ID = takes.ID
+WHERE takes.grade IN ('A-', 'A', 'A+')
+GROUP BY student.ID, student.name
+ORDER BY a_count DESC, student.name ASC
+LIMIT 10;
+```
+### G1.Find out the ID and salary of the instructors.
+```sql
+SELECT ID, salary
+FROM instructor;
+;
+```
+### G2. Find out the ID and salary of the instructor who gets more than $85,000.
+```sql
+SELECT ID, salary
+FROM instructor
+WHERE salary > 85000;
+```
+
+### G3. Find out the department names and their budget at the university.
+```sql
+SELECT dept_name, budget
+FROM department;
+```
+### G4. List out the names of the instructors from Computer Science who have more than $70,000.
+```sql
+SELECT name
+FROM instructor
+WHERE dept_name = 'Computer Science'
+AND salary > 70000;
+```
+
+### G5. For all instructors in the university who have taught some course, find their names and the course ID of all courses they taught.
+```sql
+SELECT i.name, t.course_id
+FROM instructor i
+JOIN teaches t ON i.ID = t.ID;
+```
+### G6. Find the names of all instructors whose salary is greater than at least one instructor in the Biology department.
+```sql
+SELECT name
+FROM instructor
+WHERE salary > ANY (
+SELECT salary
+FROM instructor
+WHERE dept_name = 'Biology'
+);
+```
+### G7. Find the advisor of the student with ID 12345
+```sql
+SELECT i_id
+FROM advisor
+WHERE s_id = 12345;
+```
+### G8. Find the average salary of all instructors.
+```sql
+SELECT AVG(salary) AS average_salary
+FROM instructor;
+```
+### G9. Find the names of all departments whose building name includes the substring.
+```sql
+SELECT dept_name
+FROM department
+WHERE building LIKE '%Watson%';
+```
 
 ### G10. Find the names of instructors with salary amounts between $90,000 and $100,000.
 ```sql
