@@ -109,8 +109,8 @@ JOIN teaches t ON i.ID = t.ID;
 ```sql
 SELECT name
 FROM instructor
-WHERE salary > ANY (
-SELECT salary
+WHERE salary >  (
+SELECT max(salary)
 FROM instructor
 WHERE dept_name = 'Biology'
 );
