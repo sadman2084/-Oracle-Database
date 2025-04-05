@@ -95,7 +95,7 @@ FROM department;
 ```sql
 SELECT name
 FROM instructor
-WHERE dept_name = 'Computer Science'
+WHERE dept_name = 'Comp. Sci.'
 AND salary > 70000;
 ```
 
