@@ -164,7 +164,7 @@ DESCRIBE NEWSPAPER;
 ## How to Use
 1. Clone this repository:
    ```bash
-   [git clone https://github.com/your-username/newspaper-sql-queries.git](https://github.com/sadman2084/-Oracle-Database.git)
+   [[git clone https://github.com/your-username/newspaper-sql-queries.git](https://github.com/sadman2084/-Oracle-Database.git)](https://github.com/sadman2084/-Oracle-Database.git)
    ```
 2. Import the SQL script into your database.
 3. Run the queries as needed.
