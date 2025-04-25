@@ -1,105 +1,95 @@
-# Oracle User Privileges and Triggers
+README - BOOKSHELF Rating Audit Trigger
+----------------------------------------
 
-## 1. Creating Users and Assigning Privileges
+📌 Objective:
+To maintain an audit trail for rating updates in the BOOKSHELF table using a BEFORE UPDATE row-level trigger.
 
-### Creating Users
-- Create `Person2` with password `1234` and grant `CREATE SESSION` privilege.
-- Create `Person1` with password `5678` and grant `CREATE SESSION`, `CREATE TABLE`, `CREATE VIEW`, and `CREATE SYNONYM` privileges.
+✅ Step-by-Step Process:
+
+1️⃣ Create the Audit Table:
+   Table Name: BOOKSHELF_AUDIT
 
 ```sql
-CREATE USER C##Person2 IDENTIFIED BY 1234;
-GRANT CREATE SESSION TO C##Person2;
-
-CREATE USER C##Person1 IDENTIFIED BY 5678;
-GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE SYNONYM TO C##Person1;
+   CREATE TABLE BOOKSHELF_AUDIT (
+       Audit_ID NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+       Book_ID NUMBER,
+       Old_Rating NUMBER(2,1),
+       New_Rating NUMBER(2,1),
+       Updated_By VARCHAR2(100),
+       Update_Time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
 ```
 
-### Creating and Managing Tables
-- `Person1` creates a table `NEWSPAPER` and inserts data.
-- `Person1` grants `SELECT` and `INSERT` privileges on `NEWSPAPER` to `Person2`.
+2️⃣ Create the Main Table:
+   Table Name: BOOKSHELF
 
-```sql
-CREATE TABLE NEWSPAPER (
-    ID NUMBER PRIMARY KEY,
-    NAME VARCHAR2(100),
-    PRICE NUMBER(5,2)
-);
+  ```sql
+   CREATE TABLE BOOKSHELF (
+       Book_ID NUMBER PRIMARY KEY,
+       Title VARCHAR2(200),
+       Author VARCHAR2(100),
+       Rating NUMBER(2,1) NULL
+   );
+   ```
 
-INSERT INTO NEWSPAPER (ID, NAME, PRICE) VALUES (1, 'Daily News', 10.50);
-INSERT INTO NEWSPAPER (ID, NAME, PRICE) VALUES (2, 'Morning Times', 12.00);
-INSERT INTO NEWSPAPER (ID, NAME, PRICE) VALUES (3, 'Evening Star', 15.75);
+3️⃣ Insert Initial Data:
 
-GRANT SELECT, INSERT ON C##Person1.NEWSPAPER TO C##Person2;
-```
+   ```sql
+   INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating)
+   VALUES (1, 'The Alchemist', 'Paulo Coelho', 4.5);
 
-### Accessing and Modifying Data
-- `Person2` retrieves and inserts data into `NEWSPAPER`.
+   INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating)
+   VALUES (2, '1984', 'George Orwell', 4.8);
 
-```sql
-SELECT * FROM C##Person1.NEWSPAPER;
-INSERT INTO C##Person1.NEWSPAPER (ID, NAME, PRICE) VALUES (4, 'Weekly Journal', 20.00);
-COMMIT;
+   INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating)
+   VALUES (3, 'To Kill a Mockingbird', 'Harper Lee', 4.9);
+
+   COMMIT;
+   ```
+
+4️⃣ Create the Trigger:
+
+   ```sql
+   CREATE OR REPLACE TRIGGER trg_bookshelf_rating_audit
+   BEFORE UPDATE OF Rating ON BOOKSHELF
+   FOR EACH ROW
+   BEGIN
+       IF :OLD.Rating != :NEW.Rating THEN
+           INSERT INTO BOOKSHELF_AUDIT (Book_ID, Old_Rating, New_Rating, Updated_By, Update_Time)
+           VALUES (:OLD.Book_ID, :OLD.Rating, :NEW.Rating, USER, SYSTIMESTAMP);
+       END IF;
+   END;
+   /
+   ```
+
+5️⃣ Test the Trigger with UPDATEs:
+
+   ```sql
+   UPDATE BOOKSHELF SET Rating = 4.7 WHERE Book_ID = 1;
+   UPDATE BOOKSHELF SET Rating = 4.6 WHERE Book_ID = 2;
+   COMMIT;
+   ```
+
+6️⃣ Verify the Audit Entries:
+
+   ```sql
+   SELECT * FROM BOOKSHELF_AUDIT;
+   ```
+
+📊 Sample Output:
+
+| AUDIT_ID | BOOK_ID | OLD_RATING | NEW_RATING | UPDATED_BY | UPDATE_TIME                  |
+|----------|---------|------------|------------|------------|------------------------------|
+| 1        | 1       | 4.5        | 4.7        | SYSTEM     | 09-FEB-25 12.41.15.842 PM    |
+| 2        | 2       | 4.8        | 4.6        | SYSTEM     | 09-FEB-25 12.41.15.844 PM    |
+
+📝 Note:
+- Trigger ensures audit entry is only made if the **Rating** actually changes.
+- Timestamp is generated using `SYSTIMESTAMP`.
+- User who performed the update is captured via `USER`.
+
 ```
 
 ---
 
-## 2. Implementing a Row-Level Trigger for Rating Updates
-
-### Creating Tables
-- Create `BOOKSHELF_AUDIT` to track rating changes.
-- Create `BOOKSHELF` and insert initial data.
-
-```sql
-CREATE TABLE BOOKSHELF_AUDIT (
-    Audit_ID NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    Book_ID NUMBER,
-    Old_Rating NUMBER(2,1),
-    New_Rating NUMBER(2,1),
-    Updated_By VARCHAR2(100),
-    Update_Time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE BOOKSHELF (
-    Book_ID NUMBER PRIMARY KEY,
-    Title VARCHAR2(200),
-    Author VARCHAR2(100),
-    Rating NUMBER(2,1) NULL
-);
-
-INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating) VALUES (1, 'The Alchemist', 'Paulo Coelho', 4.5);
-INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating) VALUES (2, '1984', 'George Orwell', 4.8);
-INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating) VALUES (3, 'To Kill a Mockingbird', 'Harper Lee', 4.9);
-
-COMMIT;
-```
-
-### Creating a Trigger for Rating Updates
-- A `BEFORE UPDATE` trigger logs changes in `BOOKSHELF_AUDIT` when the `Rating` column is updated.
-
-```sql
-CREATE OR REPLACE TRIGGER trg_bookshelf_rating_audit
-BEFORE UPDATE OF Rating ON BOOKSHELF
-FOR EACH ROW
-BEGIN
-    IF :OLD.Rating != :NEW.Rating THEN
-        INSERT INTO BOOKSHELF_AUDIT (Book_ID, Old_Rating, New_Rating, Updated_By, Update_Time)
-        VALUES (:OLD.Book_ID, :OLD.Rating, :NEW.Rating, USER, SYSTIMESTAMP);
-    END IF;
-END;
-/
-```
-
-### Updating Ratings and Viewing Audit Logs
-- Modify book ratings and verify updates in `BOOKSHELF_AUDIT`.
-
-```sql
-UPDATE BOOKSHELF SET Rating = 4.7 WHERE Book_ID = 1;
-UPDATE BOOKSHELF SET Rating = 4.6 WHERE Book_ID = 2;
-
-COMMIT;
-
-SELECT * FROM BOOKSHELF_AUDIT;
-```
-
-This README provides step-by-step SQL commands to create users, assign privileges, create tables, and implement a row-level trigger for monitoring rating changes in a bookshelf database.
-
+চাইলে এইটা `.txt` ফাইল আকারে বানিয়ে দিতেও পারি। বলো দিলে করে দিচ্ছি। 😊
