@@ -235,10 +235,10 @@ WHERE name NOT IN ('Mozart', 'Einstein');
 
 ### G26. Find the total number of (distinct) students who have taken course sections taught by the instructor with ID 110011.
 ```sql
-SELECT COUNT(DISTINCT takes.ID) AS total_students
-FROM takes
-JOIN teaches USING (course_id, sec_id, semester, year)
-WHERE teaches.ID = 110011;
+select distinct count(student.id) as total_num_student from student,takes,teaches
+where takes.id=student.id
+ and teaches.course_id=takes.course_id
+ and teaches.id=110011
 ```
 
 ### G27. Find the ID and names of all instructors whose salary is greater than at least one instructor in the History department.
