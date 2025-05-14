@@ -9,12 +9,11 @@ ORDER BY dept_name ASC;
 
 ### 2. Display a list of all instructors, showing each instructor's ID and the number of sections taught. Make sure to show the number of sections as 0 for instructors who have not taught any section.
 ```sql
-SELECT instructor.ID,
-       COALESCE(COUNT(teaches.sec_id), 0) AS number_of_sections
+SELECT instructor.id, COUNT(teaches.course_id) AS num_sections
 FROM instructor
-LEFT JOIN teaches ON instructor.ID = teaches.ID
-GROUP BY instructor.ID
-ORDER BY number_of_sections ASC, instructor.ID ASC;
+LEFT JOIN teaches ON instructor.id = teaches.id
+GROUP BY instructor.id
+order by num_sections asc;
 ```
 
 ### 3. For each student who has retaken a course at least twice (i.e., the student has taken the course at least three times), show the course ID and the student's ID. Please display your results in order of course ID and do not display duplicate rows.
