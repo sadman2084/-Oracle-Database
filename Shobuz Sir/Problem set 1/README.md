@@ -36,15 +36,13 @@ HAVING COUNT(*) >= 3;
 ```
 ### 5. Find the sections that had maximum enrollment in Fall 2010.
 ```sql
-SELECT course_id, sec_id 
-FROM takes 
-WHERE semester = 'Fall' AND year = 2010 
-GROUP BY course_id, sec_id 
-HAVING COUNT(ID) = (
-    SELECT MAX(cnt) 
-    FROM (SELECT COUNT(ID) AS cnt FROM takes 
-          WHERE semester = 'Fall' AND year = 2010 
-          GROUP BY course_id, sec_id) AS max_enroll
+select top 1
+ course_id, sec_id 
+from takes
+WHERE semester = 'Fall' AND year = 2010
+group by course_id, sec_id
+order by count(*) desc;
+
 );
 ```
 ### 6. Find student names and the number of law courses taken for students who have taken at least half of the available law courses. (These courses are named things like or Environmental Law.
