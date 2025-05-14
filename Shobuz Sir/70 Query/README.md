@@ -590,16 +590,17 @@ ORDER BY dept_name;
 ```
 ### 59. Display a list of all instructors, showing each instructor's ID and the number of sections taught. Make sure to show the number of sections as 0 for instructors who have not taught any section
 ```sql
-SELECT i.ID, COUNT(t.course_id) AS total_sections
-FROM instructor i
-LEFT JOIN teaches t ON i.ID = t.ID
-GROUP BY i.ID;
+SELECT instructor.id, COUNT(teaches.course_id) AS num_sections
+FROM instructor
+LEFT JOIN teaches ON instructor.id = teaches.id
+GROUP BY instructor.id
+order by num_sections asc;
 ```
 ### 60. For each student who has retaken a course at least twice (i.e., the student has taken the courseat least three times), show the course ID and the student's ID. Please display your results in order of course ID and do not display duplicate rows
 ```sql
-SELECT DISTINCT ID, course_id
+SELECT DISTINCT id, course_id
 FROM takes
-GROUP BY ID, course_id
+GROUP BY id, course_id
 HAVING COUNT(*) >= 3
 ORDER BY course_id;
 ```
@@ -618,18 +619,18 @@ WHERE s.dept_name = 'Biology' AND s.ID IN (
 ```
 ### 62. Find the sections that had maximum enrollment in Fall 2010
 ```sql
-SELECT course_id, sec_id, semester, year, COUNT(ID) AS enrollment
+SELECT course_id, sec_id, semester, year
 FROM takes
 WHERE semester = 'Fall' AND year = 2010
 GROUP BY course_id, sec_id, semester, year
-HAVING COUNT(ID) = (
-    SELECT MAX(enroll_count)
+HAVING COUNT(id) = (
+    SELECT MAX(cnt)
     FROM (
-        SELECT COUNT(ID) AS enroll_count
+        SELECT COUNT(id) AS cnt
         FROM takes
         WHERE semester = 'Fall' AND year = 2010
-        GROUP BY course_id, sec_id
-    ) AS max_enroll
+        GROUP BY course_id, sec_id, semester, year
+    ) AS counts
 );
 ```
 ### 63. Find student names and the number of law courses taken for students who have taken at least half of the available law courses. (These courses are named things like 'Tort Law' or Environmental Law'
