@@ -39,7 +39,7 @@ To maintain an audit trail for rating updates in the BOOKSHELF table using a BEF
    VALUES (1, 'Bilai Zindabaad', 'Paulo Coelho', 4.5);
 
    INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating)
-   VALUES (2, 'Mumu', 'George Orwell', 4.8);
+   VALUES (2, 'Mehedi Mota', 'George Orwell', 4.8);
 
    INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating)
    VALUES (3, 'Bilai', 'Harper Lee', 4.9);
