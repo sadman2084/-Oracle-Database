@@ -62,13 +62,10 @@ WHERE title LIKE '%Law%'
 
 ### 7. Find the rank and name of the 10 students who earned the most A grades (A-, A, A+). Use alphabetical order by name to break ties. Note: the browser SQLite does not support window functions.
 ```sql
-SELECT student.name, COUNT(*) AS a_count
-FROM student
-JOIN takes ON student.ID = takes.ID
-WHERE takes.grade IN ('A-', 'A', 'A+')
-GROUP BY student.ID, student.name
-ORDER BY a_count DESC, student.name ASC
-LIMIT 10;
+select name,count(*) as cnt from takes,student
+where student.id=takes.id and grade in ('A-', 'A', 'A+')
+group by name,takes.id
+order by cnt desc;
 ```
 ### G1.Find out the ID and salary of the instructors.
 ```sql
