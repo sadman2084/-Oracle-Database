@@ -50,13 +50,11 @@ GROUP BY course_id, sec_id;
 ### f. Find the maximum enrollment in Fall 2017.
 
 ```sql
-SELECT MAX(enrollment) AS max_enrollment
-FROM (
-  SELECT COUNT(ID) AS enrollment
-  FROM takes
-  WHERE semester = 'Fall' AND year = 2017
-  GROUP BY course_id, sec_id
-) AS enrollments;
+select top 1
+course_id,sec_id from takes
+where semester='Fall' and year=2017
+group by course_id,sec_id
+order by count(*) desc;
 ```
 
 ### g. Find sections with maximum enrollment in Fall 2017.
