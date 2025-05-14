@@ -36,13 +36,13 @@ To maintain an audit trail for rating updates in the BOOKSHELF table using a BEF
 
    ```sql
    INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating)
-   VALUES (1, 'The Alchemist', 'Paulo Coelho', 4.5);
+   VALUES (1, 'Bilai Zindabaad', 'Paulo Coelho', 4.5);
 
    INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating)
-   VALUES (2, '1984', 'George Orwell', 4.8);
+   VALUES (2, 'Mumu', 'George Orwell', 4.8);
 
    INSERT INTO BOOKSHELF (Book_ID, Title, Author, Rating)
-   VALUES (3, 'To Kill a Mockingbird', 'Harper Lee', 4.9);
+   VALUES (3, 'Bilai', 'Harper Lee', 4.9);
 
    COMMIT;
    ```
