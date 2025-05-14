@@ -15,11 +15,12 @@ WHERE dept_name = 'Comp. Sci.' AND credits = 3;
 ### b. Find the IDs of all students who were taught by an instructor named Einstein; no duplicates.
 
 ```sql
-SELECT DISTINCT takes.ID
-FROM takes
-JOIN teaches USING (course_id, sec_id, semester, year)
-JOIN instructor ON teaches.ID = instructor.ID
-WHERE instructor.name = 'Einstein';
+select takes.id from takes,teaches
+where takes.course_id=teaches.course_id
+and teaches.course_id in (select course_id from teaches
+where id =(select id from instructor
+where name='Einstein')
+)
 ```
 
 ### c. Find the highest salary of any instructor.
